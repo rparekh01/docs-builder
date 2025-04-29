@@ -14,7 +14,9 @@ import Image from "@tiptap/extension-image";
 import ImageResize from "tiptap-extension-resize-image";
 import Underline from "@tiptap/extension-underline";
 import { useEditorStore } from "@/store/use-editor-store";
-
+import Highlight from "@tiptap/extension-highlight";
+import Color from "@tiptap/extension-color";
+import Link from "@tiptap/extension-link";
 export const Editor = () => {
   const { setEditor } = useEditorStore();
 
@@ -53,6 +55,13 @@ export const Editor = () => {
     },
     extensions: [
       StarterKit,
+      Link.configure({
+        openOnClick: false,
+      }),
+      Color,
+      Highlight.configure({
+        multicolor: true,
+      }),
       FontFamily,
       TextStyle,
       TaskItem.configure({ nested: true }),
