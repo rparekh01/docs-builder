@@ -44,9 +44,62 @@ import {
   Undo2Icon,
   UploadIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, KeyboardEvent, useState } from "react";
 
 import { type ColorResult, SketchPicker } from "react-color";
+
+const FontSizeButton = () => {
+  const { editor } = useEditorStore();
+
+  const currentFontSize = editor?.getAttributes("textStyle").fontSize
+    ? editor?.getAttributes("textStyle").fontSize.replace("px", "")
+    : "16";
+
+  const [fontSize, setFontSize] = useState(currentFontSize);
+  const [inputValue, setInputValue] = useState(fontSize);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const updateFontSize = (newSize: string) => {
+    const size = parseInt(newSize);
+    if (!isNaN(size) && size > 0) {
+      editor?.chain().focus().setFontSize(`${size}px`).run();
+      setFontSize(newSize);
+      setInputValue(newSize);
+      setIsEditing(false);
+    }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    updateFontSize(inputValue);
+  };
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      updateFontSize(inputValue);
+      editor?.commands.focus();
+    }
+  };
+
+  const increment = () => {
+    const newSize = parseInt(fontSize) + 1;
+    updateFontSize(newSize.toString());
+  };
+
+  const decrement = () => {
+    const newSize = parseInt(fontSize) - 1;
+    if (newSize > 0) {
+      return updateFontSize(newSize.toString());
+    }
+    return;
+  };
+
+  return <div>Font Size Button</div>;
+};
 
 const ListButton = () => {
   const { editor } = useEditorStore();
@@ -536,7 +589,7 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="min-h-6 bg-neutral-300" />
       <HeadingLevelButton />
       <Separator orientation="vertical" className="min-h-6 bg-neutral-300" />
-      {/* TODO: font size */}
+      <FontSizeButton />
       <Separator orientation="vertical" className="min-h-6 bg-neutral-300" />
       {sections[1].map((item) => (
         <ToolbarButton key={item.label} {...item} />
