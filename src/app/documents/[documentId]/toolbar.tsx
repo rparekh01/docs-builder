@@ -350,7 +350,6 @@ const LinkButton = () => {
 
   const [value, setValue] = useState("");
 
-  console.log(editor?.getAttributes("link").href);
   const onChange = (href: string) => {
     editor?.chain().focus().extendMarkRange("link").setLink({ href }).run();
     setValue("");
