@@ -3,10 +3,5 @@ interface DocumentsLayoutProps {
 }
 
 export default function DocumentLayout({ children }: DocumentsLayoutProps) {
-  return (
-    <div>
-      <nav className="bg-blue-500">Document navbar</nav>
-      {children}
-    </div>
-  );
+  return <div>{children}</div>;
 }
