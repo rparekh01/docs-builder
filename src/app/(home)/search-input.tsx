@@ -2,11 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSearchParams } from "@/hooks/use-search-params";
 import { SearchIcon, XIcon } from "lucide-react";
 import { useRef, useState } from "react";
 
 export const SearchInput = () => {
-  const [value, setValue] = useState<string>("");
+  const [search, setSearch] = useSearchParams();
+
+  const [value, setValue] = useState<string>(search);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -14,19 +17,21 @@ export const SearchInput = () => {
     setValue(e.target.value);
   };
 
-  // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(value);
-  // };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSearch(value);
+    inputRef.current?.blur();
+  };
 
   const handleClear = () => {
     setValue("");
+    setSearch("");
     inputRef.current?.focus();
   };
 
   return (
     <div className="flex-1 flex items-center justify-center">
-      <form className="relative max-w-[720px] w-full">
+      <form className="relative max-w-[720px] w-full" onSubmit={handleSubmit}>
         <Input
           value={value}
           ref={inputRef}
