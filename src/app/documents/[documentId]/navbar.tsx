@@ -27,7 +27,7 @@ export const Navbar = () => {
           <div className="flex">
             <Menubar className="border-none bg-transparent shadow-none h-auto p-0">
               <MenubarMenu>
-                <MenubarTrigger>
+                <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
                   File
                   <MenubarContent>
                     <MenubarItem>
@@ -35,6 +35,17 @@ export const Navbar = () => {
                       Save
                     </MenubarItem>
                   </MenubarContent>
+                </MenubarTrigger>
+              </MenubarMenu>
+              <MenubarMenu>
+                <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
+                  Edit
+                </MenubarTrigger>
+                <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
+                  Insert
+                </MenubarTrigger>
+                <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
+                  Format
                 </MenubarTrigger>
               </MenubarMenu>
             </Menubar>
