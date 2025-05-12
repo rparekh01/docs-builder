@@ -56,7 +56,13 @@ export const DocumentMenu = ({
             Remove
           </DropdownMenuItem>
         </RemoveDialogue>
-        <DropdownMenuItem onClick={() => onNewTabClick(documentId)}>
+        <DropdownMenuItem
+          onClick={(e) => {
+            onNewTabClick(documentId);
+            e.stopPropagation();
+          }}
+          onSelect={(e) => e.preventDefault()}
+        >
           <ExternalLinkIcon className="mr-2 size-4" />
           Open in a new tab
         </DropdownMenuItem>
