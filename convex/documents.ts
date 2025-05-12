@@ -48,3 +48,27 @@ export const removeById = mutation({
     await ctx.db.delete(args.id);
   },
 });
+
+export const updateById = mutation({
+  args: { id: v.id("documents"), title: v.string() },
+  handler: async (ctx, args) => {
+    const user = await ctx.auth.getUserIdentity();
+
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+    const document = await ctx.db.get(args.id);
+
+    if (!document) {
+      throw new Error("Document not found");
+    }
+
+    if (document.ownerId !== user.subject) {
+      throw new Error("User not authorized to delete document");
+    }
+
+    await ctx.db.patch(args.id, {
+      title: args.title,
+    });
+  },
+});
