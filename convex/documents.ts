@@ -64,7 +64,7 @@ export const updateById = mutation({
     }
 
     if (document.ownerId !== user.subject) {
-      throw new Error("User not authorized to delete document");
+      throw new Error("User not authorized to update document");
     }
 
     await ctx.db.patch(args.id, {
