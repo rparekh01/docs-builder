@@ -13,13 +13,20 @@ export const create = mutation({
     if (!user) {
       throw new Error("User not authenticated");
     }
+
+    const organizationId = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+
     return await ctx.db.insert("documents", {
       title: args.title ?? "Untitled Document",
       initialContent: args.initialContent,
       ownerId: user.subject,
+      organizationId,
     });
   },
 });
+
 export const get = query({
   args: {
     paginationOpts: paginationOptsValidator,
@@ -32,11 +39,33 @@ export const get = query({
       throw new Error("User not authenticated");
     }
 
+    const organizationId = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+    // organization search
+    if (search && organizationId) {
+      return await ctx.db
+        .query("documents")
+        .withSearchIndex("search_title", (q) =>
+          q.search("title", search).eq("organizationId", organizationId)
+        )
+        .paginate(paginationOpts);
+    }
+
     if (search) {
       return ctx.db
         .query("documents")
         .withSearchIndex("search_title", (q) =>
           q.search("title", search).eq("ownerId", user.subject)
+        )
+        .paginate(paginationOpts);
+    }
+
+    if (organizationId) {
+      return await ctx.db
+        .query("documents")
+        .withIndex("by_organization_id", (q) =>
+          q.eq("organizationId", organizationId)
         )
         .paginate(paginationOpts);
     }
@@ -56,13 +85,21 @@ export const removeById = mutation({
     if (!user) {
       throw new Error("User not authenticated");
     }
+
+    const organizationId = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+
     const document = await ctx.db.get(args.id);
 
     if (!document) {
       throw new Error("Document not found");
     }
+    const isOwner = document.ownerId === user.subject;
+    const isorganizationMember = organizationId === document.organizationId;
 
-    if (document.ownerId !== user.subject) {
+    // allow owner or organization member to delete document
+    if (!isOwner && !isorganizationMember) {
       throw new Error("User not authorized to delete document");
     }
 
@@ -84,7 +121,12 @@ export const updateById = mutation({
       throw new Error("Document not found");
     }
 
-    if (document.ownerId !== user.subject) {
+    const isOwner = document.ownerId === user.subject;
+    const organizationId = (user.organization_id ?? undefined) as
+      | string
+      | undefined;
+
+    if (!isOwner && !organizationId) {
       throw new Error("User not authorized to update document");
     }
 
