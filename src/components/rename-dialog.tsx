@@ -15,6 +15,7 @@ import { useState } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { toast } from "sonner";
 
 interface RenameDialogueProps {
   documentId: Id<"documents">;
@@ -40,9 +41,15 @@ export const RenameDialogue = ({
       id: documentId,
       title: title.trim() || "Untitled Document",
     })
-      .then(() => setOpen(false))
+      .catch(() =>
+        toast.error("You don't have permission to update this document's title")
+      )
+      .then(() => {
+        toast.success("Document title renamed");
+      })
       .finally(() => {
         setIsRenaming(false);
+        setOpen(false);
       });
   };
 

@@ -13,6 +13,7 @@ import { useMutation } from "convex/react";
 import { useRouter } from "next/navigation";
 import { api } from "../../../convex/_generated/api";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export const TemplateGallery = () => {
   const router = useRouter();
@@ -25,8 +26,10 @@ export const TemplateGallery = () => {
       title,
       initialContent: iniitalContent,
     })
+      .catch(() => toast.error("Failed to create new document"))
       .then((documentId) => {
         router.push(`/documents/${documentId}`);
+        toast.success("Document created");
       })
       .finally(() => {
         setIsCreating(false);
