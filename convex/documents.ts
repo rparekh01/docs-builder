@@ -96,7 +96,8 @@ export const removeById = mutation({
       throw new Error("Document not found");
     }
     const isOwner = document.ownerId === user.subject;
-    const isorganizationMember = organizationId === document.organizationId;
+    const isorganizationMember =
+      document.organizationId && document.organizationId === organizationId;
 
     // allow owner or organization member to delete document
     if (!isOwner && !isorganizationMember) {
@@ -126,12 +127,27 @@ export const updateById = mutation({
       | string
       | undefined;
 
-    if (!isOwner && !organizationId) {
+    const isOrganizationMember =
+      document.organizationId && document.organizationId === organizationId;
+
+    if (!isOwner && !isOrganizationMember) {
       throw new Error("User not authorized to update document");
     }
 
     await ctx.db.patch(args.id, {
       title: args.title,
     });
+  },
+});
+
+export const getById = query({
+  args: { id: v.id("documents") },
+  handler: async (ctx, { id }) => {
+    const document = await ctx.db.get(id);
+
+    if (!document) {
+      throw new Error("Document not found");
+    }
+    return document;
   },
 });
