@@ -8,11 +8,21 @@ const liveblocks = new Liveblocks({
   secret: process.env.LIVEBLOCKS_SECRET_KEY!,
 });
 
+// TODO: remove this when type error with sessionClaims organization is fixed
+interface SessionClaimsWithOrg {
+  o: {
+    id: string;
+  };
+}
+
 export async function POST(req: Request) {
   const { sessionClaims } = await auth();
   if (!sessionClaims) {
     return new Response("Unauthorized", { status: 401 });
   }
+
+  const { o } = sessionClaims as SessionClaimsWithOrg;
+  const sessionOrgId = o.id as string;
 
   const user = await currentUser();
   if (!user) {
@@ -25,8 +35,7 @@ export async function POST(req: Request) {
 
   const isOwner = document.ownerId === user.id;
   const isOrganizationMember =
-    document.organizationId &&
-    document.organizationId === sessionClaims?.org_id;
+    document.organizationId && document.organizationId === sessionOrgId;
 
   if (!isOwner && !isOrganizationMember) {
     return new Response("Unauthorized", { status: 401 });
