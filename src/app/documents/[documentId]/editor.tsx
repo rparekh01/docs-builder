@@ -23,7 +23,7 @@ import { LineHeightExtension } from "@/extensions/line-height";
 import { Ruler } from "./ruler";
 
 import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
-import { Threads } from "./Threads";
+import { Threads } from "./threads";
 
 export const Editor = () => {
   const liveblocks = useLiveblocksExtension();
