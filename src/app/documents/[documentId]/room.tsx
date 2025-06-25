@@ -48,7 +48,7 @@ export function Room({ children }: { children: ReactNode }) {
         let filteredUsers = users;
         if (text) {
           filteredUsers = users.filter((user) =>
-            user.name.toLowerCase().includes(text.toLocaleUpperCase())
+            user.name.toLowerCase().includes(text.toLowerCase())
           );
         }
         return filteredUsers.map((user) => user.id);
