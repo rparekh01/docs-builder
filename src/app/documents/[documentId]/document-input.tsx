@@ -3,7 +3,7 @@ import { Id } from "../../../../convex/_generated/dataModel";
 import React, { useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useDebouncedCallback } from "use-debounce";
 import { useStatus } from "@liveblocks/react";
 import { LoaderIcon } from "lucide-react";
 interface DocumentInputProps {
