@@ -1,17 +1,20 @@
-import { BsCloudCheck } from "react-icons/bs";
+import { BsCloudCheck, BsCloudSlash } from "react-icons/bs";
 import { Id } from "../../../../convex/_generated/dataModel";
 import React, { useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useDebounce, useDebouncedCallback } from "use-debounce";
+import { useStatus } from "@liveblocks/react";
+import { LoaderIcon } from "lucide-react";
 interface DocumentInputProps {
   title: string;
   id: Id<"documents">;
 }
 
 export const DocumentInput = ({ title, id }: DocumentInputProps) => {
+  const status = useStatus();
+
   const [value, setValue] = useState(title);
-  const [isError, setIsError] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [isEditiing, setIsEditing] = useState(false);
 
@@ -55,6 +58,9 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
     debouncedUpdate(newValue);
     // TODO Debounced value
   };
+  const showLoader =
+    isPending || status === "connecting" || status === "reconnecting";
+  const showError = status === "disconnected";
   return (
     <div className="flex items-center gap-2">
       {isEditiing ? (
@@ -83,7 +89,11 @@ export const DocumentInput = ({ title, id }: DocumentInputProps) => {
           {title}
         </span>
       )}
-      <BsCloudCheck />
+      {!showError && !showLoader && <BsCloudCheck className="size-4" />}
+      {showLoader && (
+        <LoaderIcon className="size-4 animate-spin text-muted-foreground" />
+      )}
+      {showError && <BsCloudSlash className="size-4" />}
     </div>
   );
 };

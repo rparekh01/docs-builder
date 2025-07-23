@@ -34,7 +34,6 @@ export function Room({ children }: { children: ReactNode }) {
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
-  console.log(users);
 
   return (
     <LiveblocksProvider
