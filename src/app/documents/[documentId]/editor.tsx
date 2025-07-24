@@ -47,6 +47,7 @@ export const Editor = ({ initialContent }: EditorProps) => {
     useStorage((root) => root.rightMargin) ?? RIGHT_PADDING_DEFAULT;
 
   const editor = useEditor({
+    autofocus: true,
     immediatelyRender: false,
     onCreate({ editor }) {
       setEditor(editor);

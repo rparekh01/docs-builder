@@ -3,10 +3,7 @@ export const templates = [
     id: "blank",
     label: "Blank Document",
     imageUrl: "/blank-document.svg",
-    initialContent: `
-    <h1>Document Title</h1>
-    <p>Start writing your document here...</p>
-    `,
+    initialContent: "",
   },
   {
     id: "business-letter",
