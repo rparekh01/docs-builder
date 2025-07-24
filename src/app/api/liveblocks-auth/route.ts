@@ -41,11 +41,32 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
+  const name =
+    user.firstName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous";
+  const nameToNumber = name
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hue = Math.abs(nameToNumber) % 360;
+
+  // Convert HSL to Hex
+  function hslToHex(h: number, s: number, l: number) {
+    l /= 100;
+    const a = (s * Math.min(l, 1 - l)) / 100;
+    const f = (n: number) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color)
+        .toString(16)
+        .padStart(2, "0");
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+  }
+  const color = hslToHex(hue, 80, 60);
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name:
-        user.firstName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
+      name: name,
       avatar: user.imageUrl,
+      color,
     },
   });
 

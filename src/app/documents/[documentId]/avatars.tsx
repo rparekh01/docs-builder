@@ -6,6 +6,7 @@ import {
   useOthers,
   useSelf,
 } from "@liveblocks/react/suspense";
+import Image from "next/image";
 
 const AVATAR_SIZE = 36;
 
@@ -66,7 +67,13 @@ function Avatar({ src, name }: AvatarProps) {
       >
         {name}
       </div>
-      <img alt={name} src={src} className="size-full rounded-full" />
+      <Image
+        alt={name}
+        src={src}
+        className="size-full rounded-full"
+        width="20"
+        height="20"
+      />
     </div>
   );
 }
